@@ -1,0 +1,833 @@
+<apex:page standardController="Case" extensions="E2CP.NewCommentController" action="{!loadPreferences}" showHeader="false" sidebar="false" standardStylesheets="false">
+    
+    <script language="javascript">
+    function publicclicked(input) { 
+    if (input.checked){ 
+        if (allowcontact==1){
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.emailCustomerPBSI.EmailCustomer_Checkbox}").disabled=false; 
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.emailCustomerPBSI.EmailCustomer_Checkbox}").checked= {!EMAIL_NOTIFICATION}; 
+        }
+        if ({!ENABLE_ADDITIONAL_EMAILS}==true)
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalEmailsPBSI.additionalEmails_TextBox}").disabled=false; 
+        if ({!ENABLE_ADDITIONAL_CCS}==true)
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalCCsPBSI.additionalCCs_TextBox}").disabled=false; 
+        if ({!ENABLE_ADDITIONAL_BCCS}==true)
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalBCCsPBSI.additionalBCCs_TextBox}").disabled=false; 
+        
+        //leads
+        for (var i=0;;i++) { 
+            var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i);
+            if(cbox != null){
+                if(cbox.value != ''){ 
+                    cbox.disabled = false;  
+                    cbox.checked = false;
+                }
+            } 
+            else {
+                break; 
+            }
+        } 
+        
+        //contact roles
+        for (var i=0;;i++) { 
+            var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i);
+            if (cbox != null){ 
+                if(cbox.value != ''){
+                    cbox.disabled = false; 
+                    cbox.checked = {!EMAIL_NOTIFICATION};
+                }
+            } 
+            else {
+                break;
+            } 
+        } 
+        
+        //case teams
+        for (var i=0;;i++){ 
+            var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i);   
+            if(cbox != null){ 
+                if(cbox.value != ''){
+                    cbox.disabled = false;
+                    cbox.checked= {!EMAIL_NOTIFICATION};
+                }
+            }
+            else {
+                break; 
+            }
+        }
+        
+        //attachments
+        for (var i=0;;i++){ 
+            if (document.getElementById("{!$Component.addCommentF.addCommentPB.attachmentsPBS.attachmentsPBSI.attachments_Checkbox}:"+i) != null) { 
+                document.getElementById("{!$Component.addCommentF.addCommentPB.attachmentsPBS.attachmentsPBSI.attachments_Checkbox}:"+i).disabled=false; 
+            }
+            else {
+                break;
+            }
+        }
+    } 
+    else { 
+        if (allowcontact==1){
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.emailCustomerPBSI.EmailCustomer_Checkbox}").disabled=true; 
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.emailCustomerPBSI.EmailCustomer_Checkbox}").checked=false; 
+        }
+        if ({!ENABLE_ADDITIONAL_EMAILS}==true){
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalEmailsPBSI.additionalEmails_TextBox}").disabled=true; 
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalEmailsPBSI.additionalEmails_TextBox}").value=""; 
+        }
+        if ({!ENABLE_ADDITIONAL_CCS}==true){
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalCCsPBSI.additionalCCs_TextBox}").disabled=true; 
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalCCsPBSI.additionalCCs_TextBox}").value=""; 
+        }
+        if ({!ENABLE_ADDITIONAL_BCCS}==true){
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalBCCsPBSI.additionalBCCs_TextBox}").disabled=true; 
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalBCCsPBSI.additionalBCCs_TextBox}").value=""; 
+        }
+
+        //leads
+        for (var i=0;;i++) { 
+            var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i);
+            if(cbox != null){
+                if(cbox.value != ''){ 
+                    cbox.disabled = false;  
+                    cbox.checked = false;
+                }
+            } 
+            else {
+                break; 
+            }
+        } 
+        
+        //contact roles
+        for (var i=0;;i++) { 
+            var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i);
+            if (cbox != null){ 
+                if(cbox.value != ''){
+                    cbox.disabled = true; 
+                    cbox.checked = false;
+                }
+            } 
+            else {
+                break;
+            } 
+        } 
+        
+        //case teams
+        for (var i=0;;i++){ 
+            var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i);   
+            if(cbox != null){ 
+                if(cbox.value != ''){
+                    cbox.disabled = true;
+                    cbox.checked= false;
+                }
+            }
+            else {
+                break; 
+            }
+        }
+        for (var i=0;;i++){ 
+            if (document.getElementById("{!$Component.addCommentF.addCommentPB.attachmentsPBS.attachmentsPBSI.attachments_Checkbox}:"+i) != null) { 
+                document.getElementById("{!$Component.addCommentF.addCommentPB.attachmentsPBS.attachmentsPBSI.attachments_Checkbox}:"+i).disabled=true; 
+                document.getElementById("{!$Component.addCommentF.addCommentPB.attachmentsPBS.attachmentsPBSI.attachments_Checkbox}:"+i).checked=false;
+            }
+            else {
+                break; 
+            }
+        }
+    } 
+    } 
+    
+    function historyclicked() { 
+    
+        if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.emailCustomerPBSI.EmailCustomer_Checkbox}").checked){ 
+            
+            //leads
+            for (var i=0;;i++){ 
+                var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i);
+                if (cbox != null){ 
+                    if(cbox.value != '') cbox.checked={!EMAIL_NOTIFICATION};
+                } 
+                else {
+                    break; 
+                }
+            } 
+            
+            //contact roles
+            for (var i=0;;i++) { 
+                var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i);
+                if(cbox != null){ 
+                    if(cbox.value != '') cbox.checked={!EMAIL_NOTIFICATION};
+                } 
+                else {
+                    break; 
+                }
+            } 
+            
+            //case teams
+            for (var i=0;;i++) { 
+                var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i);
+                if(cbox != null){ 
+                    if(cbox.value != '') cbox.checked={!EMAIL_NOTIFICATION};
+                } 
+                else {
+                    break;
+                } 
+            } 
+            
+        } 
+        else { 
+        
+            //leads
+            for (var i=0;;i++){ 
+                var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i);
+                if (cbox != null){ 
+                    cbox.checked = false;
+                } 
+                else {
+                    break; 
+                }
+            } 
+            
+            //contact roles
+            for (var i=0;;i++) { 
+                var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i);
+                if(cbox != null){ 
+                    cbox.checked = false;
+                } 
+                else {
+                    break; 
+                }
+            } 
+            
+            //case teams
+            for (var i=0;;i++) { 
+                var cbox = document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i);
+                if(cbox != null){ 
+                    cbox.checked = false;
+                } 
+                else {
+                    break;
+                } 
+            } 
+            
+        }
+    } 
+    
+    function enableentry(input) { 
+        if (input.checked) { 
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.durationPBSI.duration_TextBox}").disabled=false;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.projectPBSI.project_Select}").disabled=false;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.servicePBSI.service_Select}").disabled=false;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.billablePBSI.Billable_Checkbox}").disabled=false;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.billablePBSI.Billable_Checkbox}").checked=true;
+            //document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.reasonPBSI.reason_Select}").disabled=false;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.descriptionPBSI.TimeDescription_TextArea}").disabled=false;
+        }
+        else
+        {
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.durationPBSI.duration_TextBox}").value='';
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.projectPBSI.project_Select}").selectedIndex=0;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.servicePBSI.service_Select}").selectedIndex=0;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.reasonPBSI.reason_Select}").selectedIndex=0;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.descriptionPBSI.TimeDescription_TextArea}").value='';
+            
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.durationPBSI.duration_TextBox}").disabled=true;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.projectPBSI.project_Select}").disabled=true;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.servicePBSI.service_Select}").disabled=true;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.billablePBSI.Billable_Checkbox}").disabled=true;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.billablePBSI.Billable_Checkbox}").checked=false;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.reasonPBSI.reason_Select}").disabled=true;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.descriptionPBSI.TimeDescription_TextArea}").disabled=true;
+        }
+    }
+    
+    function enablebillable(input) { 
+        if (!input.checked) { 
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.reasonPBSI.reason_Select}").disabled=false;
+        }
+        else
+        {
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.reasonPBSI.reason_Select}").selectedIndex=0;
+            document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.reasonPBSI.reason_Select}").disabled=true;
+        }
+    }
+    
+    function handleTextAreaElementChangeCustom(textId, counterId, maxLength, remainingText, overText) {
+        /* Used by TextAreaElement.  Relies on ids set there */
+        var textArea = document.getElementById(textId);
+        var counter = document.getElementById(counterId);
+
+        if (!textArea || !counter) return;
+
+        var valueLength = textArea.value.length;
+        if (valueLength > 0 && !(isIE || isIE5)) {
+            var lines = textArea.value.match(/\n/g);
+            if (lines) valueLength += lines.length;
+        }
+        
+        maxLength = "{!MAXIMUM_COMMENT_SIZE}";
+        
+        var remaining = maxLength - valueLength;
+
+        if (remaining < 0) {
+          counter.parentNode.className = "textCounterMiddle over";
+          counter.innerHTML = (-1 * remaining) + " " + overText;
+        } else if (remaining < 50) {
+          counter.parentNode.className = "textCounterMiddle warn";
+          counter.innerHTML = remaining + " " + remainingText;
+        } else {
+          counter.parentNode.className = "textCounterMiddle";
+        }
+    }
+
+    function updateTemplate(status) {
+        var matchFound;
+        if ("{!statusBasedTemplates}"!="") {
+            //alert("{!statusBasedTemplates}");
+            var arrStatus = "{!statusBasedTemplates}".split(",");
+            for (var i=0; i < arrStatus.length;i+=2) {
+                if (arrStatus[i]==status) {
+                    for (var j=0; j < document.getElementById("{!$Component.addCommentF.addCommentPB.templatePBS.templatePBSI.template_Select}").options.length;j++)
+                        if (document.getElementById("{!$Component.addCommentF.addCommentPB.templatePBS.templatePBSI.template_Select}").options[j].value.substring(0,15)==arrStatus[i+1]) {
+                            document.getElementById("{!$Component.addCommentF.addCommentPB.templatePBS.templatePBSI.template_Select}").value = document.getElementById("{!$Component.addCommentF.addCommentPB.templatePBS.templatePBSI.template_Select}").options[j].value;
+                            matchFound = true;
+                            break;break;
+                        }
+                }
+                else
+                {
+                    if (!matchFound) updateSelectValue(document.getElementById("{!$Component.addCommentF.addCommentPB.templatePBS.templatePBSI.template_Select}"),"{!defTemplate}");
+                }
+            }
+        }
+    }
+    
+    function updateSelectValue(obj,val) {
+        for (var i=0;i<obj.options.length;i++) {
+            if (obj.options[i].value == val)
+                obj.options[i].selected = true;
+        }
+    }
+    
+    function insertAtCursor(fieldID, sText) {
+    //inserts text at cursor - different for IE and moz
+
+        myField = document.getElementById(fieldID);
+                    
+        //IE
+        if (document.selection) {
+            myField.focus();
+            sel = document.selection.createRange();
+            sel.text = sText;
+        }
+        
+        //firefox
+        else if (myField.selectionStart || myField.selectionStart == '0') {
+            var startPos = myField.selectionStart;
+            var endPos = myField.selectionEnd;
+            myField.value = myField.value.substring(0, startPos) + sText + myField.value.substring(endPos, myField.value.length);
+        } 
+        else { 
+            myField.value += sText;
+        }
+        
+    }
+    
+    function insertCanned(obj) {   
+        insertAtCursor("{!$Component.addCommentF.addCommentPB.addCommentPBS.addCommentPBSI.Comment_TextArea}", obj);
+        //selectFirstCanned();
+    }
+    
+    function selectFirstCanned(){
+        document.getElementById('{!$Component.addCommentF.addCommentPB.addCommentPBS.cannedPBSI.cannedCategory_Select}').selectedIndex = 0;
+        loadCannedCommentOptions(document.getElementById('{!$Component.addCommentF.addCommentPB.addCommentPBS.cannedPBSI.cannedCategory_Select}').value);
+        document.getElementById('{!$Component.addCommentF.addCommentPB.addCommentPBS.cannedPBSI.cannedComment_Select}').selectedIndex = 0;
+    }
+    
+    
+    function loadCannedCommentOptions(obj) {
+    //clears sublist and adds options for the masters selected cat
+    //master list items are of format "category||title" which gets split in the loop
+    //if value is "all" then every comment is added
+
+        fullList = document.getElementById("{!$Component.addCommentF.addCommentPB.addCommentPBS.cannedPBSI.allCannedComments}");
+        filterList = document.getElementById("{!$Component.addCommentF.addCommentPB.addCommentPBS.cannedPBSI.cannedComment_Select}");
+        
+        removeAllOptions(filterList); 
+        
+        for (i=0; i < fullList.options.length; i++) {
+        
+            var tmpAll = fullList.options[i].text.split("||");
+            if (obj == tmpAll[0] || obj=='All') {
+                var newOpt = new Option(tmpAll[1], fullList.options[i].value);
+                var selLength = filterList.length; 
+                filterList.options[selLength] = newOpt; 
+            }
+            
+        }
+    
+    }
+    
+    function removeAllOptions(liste)
+    {
+        var i;
+        for(i=liste.options.length-1;i>=0;i--)
+        {
+            liste.remove(i);
+        }
+    }
+        
+    </script>
+    <apex:sectionHeader title="Case {!case.casenumber}" />
+    
+    <apex:pageMessages showDetail="false" />
+    
+    <apex:form id="addCommentF" rendered="{!NOT(CONSTRUCTOR_ERROR)}"  >
+
+        <!-- CASE INFORMATION -->
+        <apex:pageBlock id="csPB">
+            <apex:pageBlockSection title="Summary" columns="1" id="csPBS">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Subject"/>
+                    <apex:outputLabel value="{!case.subject}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Description" />
+                    <apex:outputField value="{!case.description}"/>
+                </apex:pageBlockSectionItem>
+                
+            </apex:pageBlockSection>
+        </apex:pageBlock> 
+            
+        <!-- ADD COMMENT -->
+        <apex:pageBlock title="Add Comment" id="addCommentPB"> 
+        
+            <apex:pageBlockButtons >
+                <apex:commandButton onclick="selectFirstCanned();" action="{!save}" value="Save/Send"/>
+                <apex:commandButton action="{!cancel}" value="Cancel"/>
+            </apex:pageBlockButtons>
+            
+            <apex:pageBlockSection title="Comment" columns="1" id="addCommentPBS">
+                <apex:pageBlockSectionItem id="publicPBSI" rendered="{!NOT(PrivateOnly)}">
+                    <apex:outputLabel value="Public" for="IsPublic_Checkbox"/>
+                    <apex:inputCheckbox value="{!IsPublic}" id="IsPublic_Checkbox" selected="true" onClick="publicclicked(this);" />
+                </apex:pageBlockSectionItem>
+                
+                <Apex:pageblockSectionItem id="cannedPBSI" rendered="{!ENABLE_CANNED_COMMENTS}">
+                    <apex:outputLabel value="Canned Comment" for="opCanned" />
+                    <apex:outputPanel id="cannedOP">
+
+                        <apex:selectList multiselect="false" size="1" title="Canned" id="cannedCategory_Select" required="false" onchange="loadCannedCommentOptions(this.value);">
+                            <apex:selectOptions value="{!cannedCategories}"/>
+                        </apex:selectList>
+                        
+                        <apex:selectList multiselect="false" size="1" title="Canned" id="cannedComment_Select" required="false">
+                            <apex:selectOptions value="{!cannedComments}"/>
+                        </apex:selectList>
+                                         
+                        <input class="btn" id="btnInsertCanned" type="button" value="Insert" onclick="insertCanned(document.getElementById('{!$Component.addCommentF.addCommentPB.addCommentPBS.cannedPBSI.cannedComment_Select}').value);handleTextAreaElementChangeCustom('{!$Component.addCommentF.addCommentPB.addCommentPBS.addCommentPBSI.Comment_TextArea}', 'Comment_TextArea_counter', 4000, 'remaining', 'over limit');" />
+                    
+                        <apex:selectList multiselect="false" size="1" title="Canned" id="allCannedComments" required="false" style="display: none;"> <!---->
+                            <apex:selectOptions value="{!allCannedComments}"/>
+                        </apex:selectList>
+                    
+                    </apex:outputPanel>
+                </Apex:pageblockSectionItem>
+                
+                <apex:pageBlockSectionItem id="addCommentPBSI">
+                    <apex:outputLabel value="Comment" for="Comment_TextArea"/>
+                    <apex:outputPanel >
+                        <apex:inputTextarea value="{!commentBody}" id="Comment_TextArea" cols="80" rows="8" required="true" onkeyup="handleTextAreaElementChangeCustom('{!$Component.addCommentF.addCommentPB.addCommentPBS.addCommentPBSI.Comment_TextArea}', 'Comment_TextArea_counter', 4000, 'remaining', 'over limit');" onclick="handleTextAreaElementChangeCustom('{!$Component.addCommentF.addCommentPB.addCommentPBS.addCommentPBSI.Comment_TextArea}', 'Comment_TextArea_counter', 4000, 'remaining', 'over limit');" onkeydown="handleTextAreaElementChangeCustom('{!$Component.addCommentF.addCommentPB.addCommentPBS.addCommentPBSI.Comment_TextArea}', 'Comment_TextArea_counter', 4000, 'remaining', 'over limit');" onmousedown="handleTextAreaElementChangeCustom('{!$Component.addCommentF.addCommentPB.addCommentPBS.addCommentPBSI.Comment_TextArea}', 'Comment_TextArea_counter', 4000, 'remaining', 'over limit');" onchange="handleTextAreaElementChangeCustom('{!$Component.addCommentF.addCommentPB.addCommentPBS.addCommentPBSI.Comment_TextArea}', 'Comment_TextArea_counter', 4000, 'remaining', 'over limit');"/>
+                        <div class="textCounterMiddle" style="position:relative; margin:0 auto; text-align:right; bottom: 4px;"><div style="text-align:center;align:right" class="textCounter" id="Comment_TextArea_counter">4000 remaining</div></div>
+                    </apex:outputPanel>                 
+                </apex:pageBlockSectionItem>
+
+            </apex:pageBlockSection>    
+
+            <apex:pageBlockSection columns="1" title="Case Fields" rendered="{!$ObjectType.Case.FieldSets.E2CP__New_Comment_Case_Fields.size > 0}" id="customFieldsPBS">
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.E2CP__New_Comment_Case_Fields}" var="f">
+                    <apex:inputField value="{!Case[f]}" styleClass="{!IF(f=='Status','E2CPstatus','')}" />   
+                </apex:repeat>
+            </apex:pageBlockSection>    
+                        
+            <apex:pageBlockSection title="Email Notification"  columns="1" id="emailCustomerPBS" rendered="{!NOT(PrivateOnly)}" >
+            
+                <apex:pageBlockSectionItem id="emailCustomerPBSI">
+                    <apex:outputLabel value="{!LABEL_CONTACT_NAME}" for="EmailCustomer_Checkbox"/>
+                    <apex:outputPanel >
+                        <apex:inputCheckbox value="{!EmailCustomer}" id="EmailCustomer_Checkbox" selected="true" onClick="historyclicked();"/> {!Case.Contact.Name}&nbsp;&nbsp;&nbsp;<apex:outputLabel value="{!ERROR_INVALID_CONTACT}" style="color:red" rendered="{!CannotEmailCustomer}"/>&nbsp;<apex:outputLabel value="(Email has previously bounced)" style="color:red" rendered="{!BouncedEmail}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                
+                <!-- begin leads -->
+                <apex:pageBlockSectionItem id="leadsPBSI" rendered="{!ENABLE_LEADS}">
+                    <apex:outputLabel value="{!LABEL_LEAD}" for="leads_Checkbox"/>
+                    <apex:selectCheckboxes layout="pageDirection" value="{!SelectedLeads}" title="Leads" id="leads_Checkbox" style="margin-left:-3px;">
+                        <apex:selectOptions value="{!leadsItems}"/>
+                    </apex:selectCheckboxes>
+                </apex:pageBlockSectionItem>
+                <!-- end leads -->
+
+                <apex:pageBlockSectionItem id="contactRolesPBSI" rendered="{!ENABLE_CONTACT_ROLES}">
+                    <apex:outputLabel value="Contact Roles" for="contactRoles_Checkbox"/>
+                    <apex:selectCheckboxes layout="pageDirection" value="{!SelectedContactRoles}" title="Contact Roles" id="contactRoles_Checkbox" style="margin-left:-3px;">
+                        <apex:selectOptions value="{!contactRolesItems}"/>
+                    </apex:selectCheckboxes>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem id="teamMembersPBSI" rendered="{!ENABLE_TEAM_MEMBERS && SUPPORTS_CASETEAMS}">
+                    <apex:outputLabel value="{!LABEL_TEAM_MEMBERS_NAME}" for="teamMembers_Checkbox"/>
+                    <apex:selectCheckboxes layout="pageDirection" value="{!SelectedTeamMembers}" title="Team Members" id="teamMembers_Checkbox" style="margin-left:-3px;">
+                        <apex:selectOptions value="{!teamMembersItems}"/>
+                    </apex:selectCheckboxes>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem id="additionalEmailsPBSI" rendered="{!ENABLE_ADDITIONAL_EMAILS}" helpText="separate each email address with a semi-colon (;)">
+                    <apex:outputLabel value="Additional To" for="additionalEmails_TextBox"/>
+                    <apex:inputText value="{!additionalEmails}" id="additionalEmails_TextBox" size="64" />
+                </apex:pageBlockSectionItem>  
+                
+                <apex:pageBlockSectionItem id="additionalCCsPBSI" rendered="{!ENABLE_ADDITIONAL_CCS}" helpText="separate each email address with a semi-colon (;)">
+                    <apex:outputLabel value="Additional CC" for="additionalCCs_TextBox"/>
+                    <apex:inputText value="{!additionalCCs}" id="additionalCCs_TextBox" size="64" />
+                </apex:pageBlockSectionItem>  
+                
+                <apex:pageBlockSectionItem id="additionalBCCsPBSI" rendered="{!ENABLE_ADDITIONAL_BCCS}" helpText="separate each email address with a semi-colon (;)">
+                    <apex:outputLabel value="Additional BCC" for="additionalBCCs_TextBox"/>
+                    <apex:inputText value="{!additionalBCCs}" id="additionalBCCs_TextBox" size="64" />
+                </apex:pageBlockSectionItem>  
+                   
+            </apex:pageBlockSection> 
+            
+            <apex:pageBlockSection title="Attachments" columns="1" id="attachmentsPBS" rendered="{!ENABLE_ATTACHMENTS && NOT(PrivateOnly)}">
+                <apex:pageBlockSectionItem id="attachmentsPBSI">
+                    <apex:outputLabel value="Attachments" for="attachments_Checkbox"/>
+                    <apex:selectCheckboxes layout="pageDirection" value="{!attachments}" title="Attachments" id="attachments_Checkbox" style="margin-left:-3px;">
+                        <apex:selectOptions value="{!attachmentsItems}"/>
+                    </apex:selectCheckboxes>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Email Template" columns="1" id="templatePBS" rendered="{!ENABLE_TEMPLATE_SELECT && NOT(PrivateOnly)}">
+                <apex:pageBlockSectionItem id="templatePBSI">
+                    <apex:outputLabel value="Email Template" for="template_Select" />
+                    <apex:selectList value="{!selectedTemplate}" multiselect="false" size="1" title="Template" id="template_Select" required="{!NOT(PrivateOnly)}">
+                        <apex:selectOptions value="{!templateItems}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+                        
+        </apex:pageBlock>
+                    
+        <!-- TIME ENTRY -->
+        <apex:pageBlock title="Time Entry" id="timeEntryPB" rendered="{!ENABLE_TIME_ENTRY}">
+            <apex:pageBlockSection title="" columns="1" id="timeEntryPBS">
+                <apex:pageBlockSectionItem id="createTimeEntryPBSI" >
+                    <apex:outputLabel value="Create Time Entry" for="CreateTimeEntry_Checkbox"/>
+                    <apex:inputCheckbox value="{!CreateTimeEntry}" id="CreateTimeEntry_Checkbox" selected="false" onClick="enableentry(this);" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="durationPBSI">
+                    <apex:outputLabel value="Duration" for="duration_TextBox"/>
+                    <apex:inputText value="{!duration}" id="duration_TextBox" size="17" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="projectPBSI">
+                    <apex:outputLabel value="Project" for="project_Select"/>
+                    <apex:selectList value="{!project}" multiselect="false" size="1" title="Project" id="project_Select" style="width:130px">
+                        <apex:selectOptions value="{!projectItems}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="servicePBSI">
+                    <apex:outputLabel value="Service" for="service_Select"/>
+                    <apex:selectList value="{!service}" multiselect="false" size="1" title="Service" id="service_Select" style="width:130px">
+                        <apex:selectOptions value="{!serviceItems}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="billablePBSI">
+                    <apex:outputLabel value="Billable" for="Billable_Checkbox"/>
+                    <apex:inputCheckbox value="{!Billable}" id="Billable_Checkbox" selected="false" onClick="enablebillable(this);" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="reasonPBSI">
+                    <apex:outputLabel value="Reason" for="reason_Select"/>
+                    <apex:selectList value="{!reason}" multiselect="false" size="1" title="Reason" id="reason_Select" style="width:130px">
+                        <apex:selectOptions value="{!reasonItems}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="descriptionPBSI">
+                    <apex:outputLabel value="Time Description" for="TimeDescription_TextArea"/>
+                    <apex:inputTextarea value="{!timeDescription}" id="TimeDescription_TextArea" cols="80" rows="8" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+            
+
+        <!-- ALL COMMENTS -->
+        <apex:pageBlock title="Comments" id="allCommentsPB">
+            <apex:pageBlockSection title=" " columns="1"  id="allCommentsPBS">
+                <apex:pageBlockTable value="{!CaseComments}" var="cmt" >
+                    <apex:column value="{!cmt.IsPublished}" headerValue="Public"/>
+                    <apex:column value="{!cmt.CreatedDate}"/>
+                    <apex:column value="{!cmt.CreatedById}"/>
+                    <apex:column value="{!cmt.CommentBody}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+    </apex:form>
+    <script language="javascript"> 
+        for (var i=0;;i++) { 
+            if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i) != null)
+            { 
+                if (!document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i).disabled)
+                    document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i).checked=true;
+            } 
+            else 
+                break; 
+        } 
+        for (var i=0;;i++){ 
+            if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i) != null) { 
+                if (!document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i).disabled)
+                    document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i).checked=true;
+            }
+            else 
+                break;
+        }
+        
+        for (var i=0;;i++){ 
+            if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i) != null) { 
+                if (!document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i).disabled)
+                    document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i).checked=true;
+            }
+            else 
+                break;
+        }
+
+        
+        if ({!ENABLE_TIME_ENTRY}==true) {
+            if(document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.createTimeEntryPBSI.CreateTimeEntry_Checkbox}").checked==false){
+                document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.durationPBSI.duration_TextBox}").disabled=true;
+                document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.projectPBSI.project_Select}").disabled=true;
+                document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.servicePBSI.service_Select}").disabled=true;
+                document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.billablePBSI.Billable_Checkbox}").disabled=true;
+                document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.reasonPBSI.reason_Select}").disabled=true;
+                document.getElementById("{!$Component.addCommentF.timeEntryPB.timeEntryPBS.descriptionPBSI.TimeDescription_TextArea}").disabled=true;
+            }
+        } 
+        var allowcontact=!{!CannotEmailCustomer};
+        if (!allowcontact && {!NOT(PrivateOnly)}) {
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.emailCustomerPBSI.EmailCustomer_Checkbox}").checked=false;
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.emailCustomerPBSI.EmailCustomer_Checkbox}").disabled=true;
+        }
+        if ({!COLLAPSE_COMMENTS_SECTION}==true) twistSection(document.getElementById("{!$Component.addCommentF.allCommentsPB.allCommentsPBS}").firstChild.firstChild);
+        if ({!COLLAPSE_ATTACHMENTS_SECTION}==true && {!NOT(PrivateOnly)}) twistSection(document.getElementById("{!$Component.addCommentF.addCommentPB.attachmentsPBS}").firstChild.firstChild);
+        if ({!ENABLE_TEMPLATE_SELECT}==true && {!COLLAPSE_TEMPLATES_SECTION}==true && {!NOT(PrivateOnly)}) twistSection(document.getElementById("{!$Component.addCommentF.addCommentPB.templatePBS}").firstChild.firstChild);
+        if ({!COLLAPSE_EMAILS_SECTION}==true && {!NOT(PrivateOnly)}) twistSection(document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS}").firstChild.firstChild);
+        if ({!COLLAPSE_CASE_SUMMARY_SECTION}==true) twistSection(document.getElementById("{!$Component.addCommentF.csPB.csPBS}").firstChild.firstChild);
+        
+        if ({!$ObjectType.Case.FieldSets.E2CP__New_Comment_Case_Fields.size > 0}==true && {!COLLAPSE_CUSTOM_FIELDS_SECTION}==true) twistSection(document.getElementById("{!$Component.addCommentF.addCommentPB.customFieldsPBS}").firstChild.firstChild);
+        
+        
+        
+        if ({!ENABLE_TEAM_MEMBERS}==true) {
+            var memberIds = "{!uncheckedTeamMembers}";
+            //loop and unchecked matched values
+            for (var i=0;;i++) { 
+                if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i) != null)
+                { 
+                    if (memberIds.toUpperCase().indexOf(document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i).value.toUpperCase().substr(0,15))!=-1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i).checked=false;
+                } 
+                else 
+                    break; 
+            }
+        }
+        
+        if ({!EMAIL_NOTIFICATION}==false){
+            //contact
+            document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.emailCustomerPBSI.EmailCustomer_Checkbox}").checked=false;
+            
+            //contact roles
+            for (var i=0;;i++){ 
+                if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i) != null)
+                { 
+                    //if (rolescantbechecked[i]!=1)
+                        //document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i).disabled=true; 
+                    //if (rolescantbechecked[i]!=1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i).checked=false;
+                } 
+                else 
+                    break; 
+            } 
+            
+            //team member
+            for (var i=0;;i++){ 
+                if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i) != null)
+                { 
+                    //if (memberscantbechecked[i]!=1)
+                        //document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i).disabled=true; 
+                    //if (memberscantbechecked[i]!=1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i).checked=false;
+                } 
+                else 
+                    break; 
+            } 
+            
+            //email leads
+            for (var i=0;;i++){ 
+                if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i) != null)
+                { 
+                    //if (memberscantbechecked[i]!=1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i).disabled=true; 
+                    //if (memberscantbechecked[i]!=1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i).checked=false;
+                } 
+                else 
+                    break; 
+            } 
+            
+        }
+        
+        if ({!PUBLIC_CHECKED}==false) {
+            document.getElementById("{!$Component.addCommentF.addCommentPB.addCommentPBS.publicPBSI.IsPublic_Checkbox}").checked=false;
+            if (allowcontact==1){
+                document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.emailCustomerPBSI.EmailCustomer_Checkbox}").disabled=true; 
+                document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.emailCustomerPBSI.EmailCustomer_Checkbox}").checked=false; 
+            }
+            if ({!ENABLE_ADDITIONAL_EMAILS}==true){
+                document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalEmailsPBSI.additionalEmails_TextBox}").value=""; 
+                document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalEmailsPBSI.additionalEmails_TextBox}").disabled=true; 
+            }
+            if ({!ENABLE_ADDITIONAL_CCS}==true){
+                document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalCCsPBSI.additionalCCs_TextBox}").disabled=true; 
+                document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalCCsPBSI.additionalCCs_TextBox}").value=""; 
+            }
+            if ({!ENABLE_ADDITIONAL_BCCS}==true){
+                document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalBCCsPBSI.additionalBCCs_TextBox}").disabled=true; 
+                document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.additionalBCCsPBSI.additionalBCCs_TextBox}").value=""; 
+            }
+            for (var i=0;;i++){ 
+                if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i) != null)
+                { 
+                    //if (rolescantbechecked[i]!=1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i).disabled=true; 
+                    //if (rolescantbechecked[i]!=1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.contactRolesPBSI.contactRoles_Checkbox}:"+i).checked=false;
+                } 
+                else 
+                    break; 
+            } 
+            for (var i=0;;i++){ 
+                if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i) != null)
+                { 
+                    //if (memberscantbechecked[i]!=1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i).disabled=true; 
+                    //if (memberscantbechecked[i]!=1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.teamMembersPBSI.teamMembers_Checkbox}:"+i).checked=false;
+                } 
+                else 
+                    break; 
+            }
+            
+            //email leads
+            for (var i=0;;i++){ 
+                if (document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i) != null)
+                { 
+                    //if (memberscantbechecked[i]!=1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i).disabled=true; 
+                    //if (memberscantbechecked[i]!=1)
+                        document.getElementById("{!$Component.addCommentF.addCommentPB.emailCustomerPBS.leadsPBSI.leads_Checkbox}:"+i).checked=false;
+                } 
+                else 
+                    break; 
+            } 
+            
+            for (var i=0;;i++){ 
+                if (document.getElementById("{!$Component.addCommentF.addCommentPB.attachmentsPBS.attachmentsPBSI.attachments_Checkbox}:"+i) != null) { 
+                    document.getElementById("{!$Component.addCommentF.addCommentPB.attachmentsPBS.attachmentsPBSI.attachments_Checkbox}:"+i).disabled=true; 
+                    document.getElementById("{!$Component.addCommentF.addCommentPB.attachmentsPBS.attachmentsPBSI.attachments_Checkbox}:"+i).checked=false;
+                }
+                else 
+                    break; 
+            }
+        }
+        
+
+        // remove closed statuses 
+        var m;
+        var n;
+        
+        //standard element
+        //var liststats = document.getElementById("{!$Component.addCommentF.addCommentPB.addCommentPBS.csPBSInew.newstatus}");;
+        //fieldset item
+        var liststats = getElementsByClassName('E2CPstatus')[0];
+        
+        var closedCaseStatuses = "{!JSENCODE(closedCaseStatuses)}".split(",");
+                     
+        for(m=liststats.options.length-1; m>=0; m--) {
+            for(n=0; n<closedCaseStatuses.length; n++){
+                if (liststats.options[m].value == closedCaseStatuses[n]) {
+                    liststats.remove(m);
+                    break;  
+                }
+            } 
+        }
+            
+        
+        
+        //helper for getting elements by CSS style
+        function getElementsByClassName(className) {
+            var hasClassName = new RegExp("(?:^|\\s)" + className + "(?:$|\\s)");
+            var allElements = document.getElementsByTagName("*");
+            var results = [];
+    
+            var element;
+            for (var i = 0; (element = allElements[i]) != null; i++) {
+                var elementClass = element.className;
+                if (elementClass && elementClass.indexOf(className) != -1 && hasClassName.test(elementClass))
+                    results.push(element);
+            }
+    
+            return results;
+        }
+
+    </script>
+    
+    
+    
+     <!-- console -->
+    <apex:includeScript value="/support/console/20.0/integration.js"/>
+    
+    <script language="javascript">
+        function CloseCommentTab() {
+        
+            //refresh parent
+            sforce.console.getEnclosingPrimaryTabId(refreshTab);
+            
+            //close subtab
+            sforce.console.getEnclosingTabId(closeSubtab);
+        }
+        
+        var refreshTab = function refreshTab(result){
+            sforce.console.openPrimaryTab(result.id, '/{!CsId}', false, '', openSuccess);
+        }
+        
+        var closeSubtab = function closeSubtab(result) {
+            var tabId = result.id;
+            sforce.console.closeTab(tabId);
+        };
+
+        var openSuccess = function openSuccess(result) {
+            //Report whether opening the new tab was successful
+            if (result.success == true) {
+                //alert('Primary tab successfully refreshed.');
+            } else {
+                //alert('Primary tab could not be refreshed.');
+            }
+        };
+
+        if({!CmtInserted}) CloseCommentTab();
+    
+    </script>
+    <!-- //console -->
+    
+</apex:page>

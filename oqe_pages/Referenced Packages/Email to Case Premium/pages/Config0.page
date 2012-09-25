@@ -1,0 +1,191 @@
+<apex:page controller="E2CP.Config0" tabStyle="setup_wizard__tab" action="{!SetDefaults}">
+    <style>
+        div.pbSubheader{color:#000000 !important;}
+    </style>
+    <apex:sectionHeader title="Email to Case Premium" subtitle="Preferences Configuration" help="http://www.ic-2000.com/support.asp" />
+    <apex:form >
+        <apex:pageMessages showDetail="false" />
+        <apex:pageBlock title="Initial Setup"> 
+
+            <apex:facet name="header">
+                <apex:outputpanel >
+                <table width="100%">
+                <tr>
+                
+                <td style="width:75%; text-align:center;">
+                    <apex:commandButton action="{!next}" value="Next"/>
+                </td>
+                
+                <td style="text-align:right;">
+                    <!--pageJumper start-->
+                    <apex:outputPanel >
+                         <apex:actionStatus id="pjStatus">
+                            <apex:facet name="start">
+                                <apex:outputtext value="{!pj.statusText}"/> 
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputpanel >
+                                    <apex:outputLabel for="pagejump" value="Jump to "/>
+                                    <apex:selectList value="{!pj.currentPage}"  id="pagejump" size="1">
+                                        <apex:selectOptions value="{!pj.allPages}"/>
+                                        <apex:actionSupport event="onchange" action="{!pj.goToPage}" status="pjStatus"/>
+                                    </apex:selectList> 
+                                </apex:outputpanel>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </apex:outputpanel>
+                    <!--pageJumper end-->
+                </td>
+                
+                </tr>
+                </table>
+                </apex:outputPanel>
+            </apex:facet>
+            
+            <apex:facet name="footer">
+                <apex:outputpanel >
+                <table width="100%">
+                <tr>
+                <td style="width:75%; text-align:center;">
+                    <apex:commandButton action="{!next}" value="Next"/>
+                </td>
+                <td>
+                </td>
+                </tr>
+                </table>
+                </apex:outputPanel>
+            </apex:facet>
+            
+<div>
+
+<p>Welcome to Email to Case Premium. You will need a few
+minutes to setup your organization and configure our application. If you
+need any help along the way, contact <a href="mailto:e2cpremium@ic-2000.com">e2cpremium@ic-2000.com</a>
+and we will be happy to help.</p>
+<!-- 
+<p><b>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></b>
+<b>Enable Email-to-Case:</b> If you are not already using
+Email-to-Case, you must enable it. <a
+href="/_ui/support/organization/EmailToCaseSettings/e" target="_blank">Click
+here to open Email-to-Case
+settings for your organization</a> or navigate to <i>Setup &gt; Customize &gt;
+Cases &gt; Email-to-Case</i>. We recommend checking only the 3 checkboxes
+pictured below. <i>Note: You do <b>not</b> need to enable On Demand Service
+unless you are already using it. We recommend using workflow and email alerts
+to notify case owners of new emails because it allows you to customize your own
+template.</i></p>
+
+<p><b>&nbsp;</b></p>
+<p></p>
+<apex:image url="{!$Resource.image001}" width="579" height="383"/>
+<p><b>&nbsp;</b></p>
+-->
+<!--
+<p><b>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></b><b>Verify Apex Classes: </b><a
+href="/01p?setupid=ApexClasses" target="_blank">Click here to access
+Apex Classes</a> or navigate to <i>Setup &gt; Develop &gt; Apex Classes </i>and
+verify that there is a check box in the Is Valid column for both
+NewCommentController and ProcessMessage apex classes.</p>
+
+<p><b>&nbsp;</b></p>
+<p></p>
+<apex:image url="{!$Resource.image002}" width="620" height="125" />
+<p><b>&nbsp;</b></p>
+
+<p>If either is missing the Is Valid check, simply click
+on each class name to open it up and refresh the Apex Classes page to confirm
+its Is Valid status.</p>
+
+<p><b>&nbsp;</b></p>
+-->
+
+<p>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><b>New Email Service: </b><a
+href="/email/admin/editEmailServicesFunction.apexp" target="_blank">Click
+here to add an Email Service</a> or navigate to <i>Setup &gt; Develop &gt;
+Email Services</i> <i>and click New Email Service.</i> Provide a common name
+such as Email to Case Premium, and select the ProcessMessage class for the
+Apex Class field. We recommend using the settings as pictured below,
+however you may set them as you see fit for your organizations needs. When
+finished, click Save and New Email Address
+</p>
+
+<p><b>&nbsp;</b></p>
+<p></p>
+<apex:image url="{!$Resource.E2CP__image003_0}" width="621" height="443" />
+<p><b>&nbsp;</b></p>
+
+<p><b>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></b><b>Email Service Address:</b> Email Service Address: Choose an email address name for internal use. In the example below, we suggest "e2cpremium", but you can use whatever you like. This address will not be exposed to your customers. The "Active" box should be checked by default.</p>
+<p>For the "Context User", we recommend using a dedicated API user account if you have one. The "Context User" will appear as the created by user for new email and comment records created by Email to Case Premium. In most instances, you will want to use the same User Account specified as the <a href=" /_ui/support/organization/SupportOrganizationSetupUi/d?setupid=CaseSettings" target="_blank">"Automated Case User" in Support Settings.</a></p>
+<p><u>Be sure to clear the Accept Email From field unless you want to restrict who can use Email to Case Premium.</u></p>
+
+
+<p><b>&nbsp;</b></p>
+<p></p>
+<apex:image url="{!$Resource.E2CP__image004}" width="620" height="290" />
+<p><b>&nbsp;</b></p>
+
+<p><b>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></b><b>Setup Forwarding: </b>After you click save, you will return to
+the main Email Service screen and you will see the routing address assigned by
+Salesforce.com, <a name="thePage_theForm_pageBlock2_addressTable_"><span
+style='font-size:9.0pt;line-height:115%;font-family:Arial;color:#333333'>in the
+example below: </span></a><a
+href="mailto:e2cpremium@j-67885q4x4pp12gryef7s87erz.in.salesforce.com"><span
+style='font-size:9.0pt;line-height:115%;font-family:Arial'>e2cpremium@j-67885q4x4pp12gryef7s87erz.in.salesforce.com</span></a><span
+style='font-size:9.0pt;line-height:115%;font-family:Arial;color:#333333'>. For
+testing, you may want to have your IT department setup </span><a
+href="mailto:supporttest@yourcompany.com"><span style='font-size:9.0pt;
+line-height:115%;font-family:Arial'>supporttest@yourcompany.com</span></a><span
+style='font-size:9.0pt;line-height:115%;font-family:Arial;color:#333333'> to
+forward to the routing address assigned to you. When you are ready to move to
+production, you can have your IT department forward emails addressed to </span><a
+href="mailto:support@yourcompany.com"><span style='font-size:9.0pt;line-height:
+115%;font-family:Arial'>support@yourcompany.com</span></a><span
+style='font-size:9.0pt;line-height:115%;font-family:Arial;color:#333333'> to
+that routing address as well.</span></p>
+
+<p><b>&nbsp;</b></p>
+<p></p>
+<apex:image url="{!$Resource.E2CP__image009}" width="620" height="153" />
+<p><b>&nbsp;</b></p>
+
+
+</div>
+
+        </apex:pageBlock>
+    </apex:form>
+    
+    <script>
+    //overwrite help
+    var hlinks = getElementsByClassName('links')[0];
+    hlinks.innerHTML = '<a href="http://www.ic-2000.com/support.asp" target="_new">Knowledge Base</a> | <a href="mailto:e2cpremium@ic-2000.com">e2cpremium@ic-2000.com</a> | +1.609.570.7200 <img src="/s.gif" alt="Help" class="helpIcon" title="Help">';
+    hlinks.innerHTML += '<br/><div style="font-size:smaller">Free implementation assistance is available via email or phone.</div>';    
+    
+    hlinks.style.fontSize = 'larger';
+    hlinks.style.position = 'absolute';
+    hlinks.style.float  = 'right';
+    hlinks.style.right = '0%';
+    
+    //elements by CSS style
+    function getElementsByClassName(className) {
+        var hasClassName = new RegExp("(?:^|\\s)" + className + "(?:$|\\s)");
+        var allElements = document.getElementsByTagName("*");
+        var results = [];
+    
+        var element;
+        for (var i = 0; (element = allElements[i]) != null; i++) {
+            var elementClass = element.className;
+            if (elementClass && elementClass.indexOf(className) != -1 && hasClassName.test(elementClass))
+                results.push(element);
+        }
+    
+        return results;
+    }
+    
+    </script>
+    
+</apex:page>
